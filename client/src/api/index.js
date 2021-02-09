@@ -1,7 +1,8 @@
+// const host = 'https://glacial-spire-11606.herokuapp.com';
+const host ='http://localhost:3001'
 const api = {
     get: async () => {
-        console.log('Getting users...');
-        const response = await fetch('http://localhost:3001/users')
+        const response = await fetch(`${host}/users`)
         if (response.ok) {
             return response.json();
         } else {
@@ -9,8 +10,7 @@ const api = {
         }
     },
     post: async (user) => {
-        console.log('Posting user...', user);
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(`${host}/user`, {
             method: 'POST', 
             headers: {
                 'Accept': 'application/json',
@@ -20,34 +20,28 @@ const api = {
         });
         if (response.ok) {
             const resBody = response.json();
-            console.log('resBody: ', resBody);
             return resBody;
         } else {
             return 'error'
         }
     },
     delete: async (id) => {
-        console.log('Deleting user', id);
-        const response = await fetch(`http://localhost:3001/user/${id}`, {
+        const response = await fetch(`${host}/user/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
                 'Access-Control-Allow-Origin': '*'
             },
         });
         if (response.ok) {
             const resBody = response.json();
-            console.log('resBody: ', resBody);
             return resBody;
         } else {
-            console.log('ERROR')
             return 'error';
         }
     },
     put: async (user) => {
-        console.log('Updating user');
-        const response = await fetch(`http://localhost:3001/user/${user.id}`, {
+        const response = await fetch(`${host}/user/${user.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -56,7 +50,6 @@ const api = {
         });
         if (response.ok) {
             const resBody = response.json();
-            console.log('resBody: ', resBody);
             return resBody;
         } else {
             return 'error'

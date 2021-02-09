@@ -44,8 +44,7 @@ const UserForm = ({ user, onSubmit, handleCancelForm }) => {
     const { state, handleOnChange, handleOnSubmit, disable } = useForm(
         stateSchema, 
         stateValidatorSchema, 
-        onSubmitForm, 
-        // setDirty
+        onSubmitForm
     );
 
     const {
@@ -86,6 +85,7 @@ const UserForm = ({ user, onSubmit, handleCancelForm }) => {
                     value={dateOfBirth.value}
                     handleChange={handleOnChange}
                     variant='outlined'
+                    mask='99/99/9999'
                 />
                 <Spacer />
                 <Input
@@ -95,6 +95,7 @@ const UserForm = ({ user, onSubmit, handleCancelForm }) => {
                     value={phoneNumber.value}
                     handleChange={handleOnChange}
                     variant='outlined'
+                    mask='+1 (999) 999-9999'
                 />
             </TwoColRow>
             <SingleColRow>
@@ -121,7 +122,8 @@ const UserForm = ({ user, onSubmit, handleCancelForm }) => {
                 <Button onClick={() => handleCancelForm()} variant='outlined'>
                     Cancel
                 </Button>
-                <Button type='submit' color='primary' disabled={disable}>
+                <Spacer />
+                <Button type='submit' color='primary' variant='contained' disabled={disable}>
                     Save
                 </Button>
             </SubmitContainer>

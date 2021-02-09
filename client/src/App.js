@@ -17,6 +17,7 @@ const defaultUserFormat = {
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [user, setUser] = useState(defaultUserFormat);
   const [users, setUsers] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -27,9 +28,7 @@ const App = () => {
   
   const getUsers = async () => {
     const users = await api.get();
-    console.log('users response: ', users);
     setUsers(users);
-    // console.log('updated: ', putUser);
   }
 
   const handleSaveUser = async (newUser) => {
@@ -52,15 +51,16 @@ const App = () => {
       setShowModal(false);
     } else {
       const postedUser = await api.post(newUserObj);
-      console.log('posted... ', postedUser);
       setUsers(prevUsers => [...prevUsers, postedUser])
       setShowModal(false)
     }
+    setUser(defaultUserFormat);
   }
 
   const handleCancelForm = () => {
     setUser(defaultUserFormat);
     setShowModal(false);
+    setIsEditing(false);
   }
 
   const handleRowClick = (data) => {
@@ -70,22 +70,32 @@ const App = () => {
   }
 
   const handleDeleteClick = async (data) => {
-    //Todo add a modal confirmation here 
-    await api.delete(data.row.id);
+    setUser(data.row);
+    setShowDeleteModal(true);
+  }
+
+  const deleteUser = async () => {
+    await api.delete(user.id);
     setUsers(prevUsers => {
-      return prevUsers.filter(user => user.id !== data.row.id);
+      return prevUsers.filter(userObj => userObj.id !== user.id);
     })
+    setUser(defaultUserFormat)
+  }
+
+  const handleCancelDelete = () => {
+    setUser(defaultUserFormat);
+    setShowDeleteModal(false);
   }
 
   return (
     <AppContainer>
       <HeaderRow>
-        <h1>Add Your Favorite Football Player</h1>
+        <h1>Users</h1>
         <Button 
           variant='contained' 
           color='primary'
           onClick={() => setShowModal(true)}
-        >Add Player</Button>
+        >Add User</Button>
       </HeaderRow>
       <TableContainer>
         {
@@ -101,12 +111,32 @@ const App = () => {
       <ModalDialog 
         showModal={showModal}
         setShowModal={setShowModal}
+        title='Add User'
       >
         <UserForm 
           user={user}
           onSubmit={handleSaveUser}
           handleCancelForm={handleCancelForm}
         />
+      </ModalDialog>
+      <ModalDialog 
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
+        // title={`You are about to delete ${user.firstName}`}
+      >
+        <DeleteConfirmationContainer>
+          <h3>You are about to delete {user.firstName}</h3>
+          <p>Are you sure you want to do this?</p>
+          <ButtonContainer>
+            <Button color='primary' variant='contained' onClick={() => deleteUser()}>
+                Yes Delete
+            </Button>
+            <Spacer />
+            <Button onClick={() => handleCancelDelete()} variant='outlined'>
+                Cancel
+            </Button>
+          </ButtonContainer>
+        </DeleteConfirmationContainer>
       </ModalDialog>
     </AppContainer>
   )
@@ -130,6 +160,20 @@ const HeaderRow = styled.div`
 
 const TableContainer = styled.div`
   width: 85%;
+`;
+
+const DeleteConfirmationContainer = styled.div`
+  padding: 20px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 0 20px 10px;
+`;
+
+const Spacer = styled.div`
+    min-width: 8px;
 `;
 
 export default App;

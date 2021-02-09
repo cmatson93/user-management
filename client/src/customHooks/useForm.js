@@ -22,7 +22,6 @@ export const useForm = (stateSchema, validationSchema = {}, callback, labelList,
     
     const [state, setState] = useState(stateSchema);
     const [disable, setDisable] = useState(true);
-    // const [isDirty, setIsDirty] = useState(false);
 
     // Disable button in initial render.
     useEffect(() => {
@@ -43,14 +42,8 @@ export const useForm = (stateSchema, validationSchema = {}, callback, labelList,
     // For every changed in our state this will be fired
     // To be able to disable the button
     useEffect(() => {
-        // if (isDirty) {
             setDisable(validateState());
-        // }
     }, [state, validateState]);
-
-    // const handleSubformDirtied = useCallback(() => {
-    //     setIsDirty(true);
-    // }, []);
 
     const validateInput = useCallback((name, value, currentState=state) => {
         let updatedState = { ...currentState };
@@ -110,8 +103,6 @@ export const useForm = (stateSchema, validationSchema = {}, callback, labelList,
     // Used to handle every changes in every input
     const handleOnChange = useCallback(
         event => {
-            // setIsDirty(true);
-            // dirtied(); 
       
             if(event){
                 const name = event.name !== undefined ? event.name : event.target !== undefined ? event.target.name : null;

@@ -1,13 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 3001;
+var env = require('dotenv');
+const port = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(cors());
 
-require("./routes")(app);
+require('./routes')(app);
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+app.listen(port, (error) => {
+    if (error) throw error;
+    console.log(`Listening at ${port}`);
 })
